@@ -72,7 +72,13 @@ func (e *Engine) AddViews(views ...View) *Engine {
 	return e
 }
 
+func (e *Engine) Run(addr ...string) error {
+	return e.engine.Run(addr...)
+}
+
 func Default() *Engine {
 	engine := gin.New()
+	engine.Use(gin.Logger(), gin.Recovery())
+	_ = engine.SetTrustedProxies(nil)
 	return &Engine{engine: engine}
 }
