@@ -2,7 +2,7 @@ package grf
 
 import "github.com/gin-gonic/gin"
 
-type HandlerFunc func(*Context)
+type HandlerFunc func(ctx *Context)
 
 type Engine struct {
 	engine *gin.Engine
@@ -76,9 +76,17 @@ func (e *Engine) Run(addr ...string) error {
 	return e.engine.Run(addr...)
 }
 
-func Default() *Engine {
+func New() *Engine {
 	engine := gin.New()
-	engine.Use(gin.Logger(), gin.Recovery())
 	_ = engine.SetTrustedProxies(nil)
 	return &Engine{engine: engine}
+}
+
+func Default() *Engine {
+	engine := New()
+	engine.Use(
+		defaultLogger,
+		defaultRecovery,
+	)
+	return engine
 }
